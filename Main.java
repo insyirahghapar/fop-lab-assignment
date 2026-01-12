@@ -16,6 +16,10 @@ public class Main {
             System.out.println("3. Update Event");
             System.out.println("4. Delete Event");
             System.out.println("5. Exit");
+            System.out.println("6. Backup Data");
+            System.out.println("7. Restore Data");
+            System.out.println("8. Search by Date");
+            System.out.println("9. Search by Date Range");
             System.out.print("Choose an option: ");
             input = scanner.nextLine();
 
@@ -48,7 +52,6 @@ public class Main {
                             String newTitle = scanner.nextLine();
                             System.out.print("New Desc (" + existing.getDescription() + "): ");
                             String newDesc = scanner.nextLine();
-                            // Note: In a real app, you'd allow skipping dates to keep current ones
                             LocalDateTime newStart = promptForDate(scanner, "New Start: ");
                             LocalDateTime newEnd = promptForDate(scanner, "New End: ");
                             manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd);
@@ -71,9 +74,33 @@ public class Main {
                     }
                     break;
 
-                case "5":
+                case "5": // Exit
                     System.out.println("Exiting...");
                     return;
+
+                case "6": // Backup Data (by SZA)
+                    FileManager.createBackup();
+                    break;
+
+                case "7": // Restore Data (by SZA)
+                    System.out.print("Enter backup folder name: ");
+                    String folderName = scanner.nextLine();
+                    FileManager.restoreFromBackup(folderName);
+                    break;
+
+                case "8": // Search by Date (by SZA)
+                    System.out.print("Enter date (YYYY-MM-DD): ");
+                    String date = scanner.nextLine();
+                    SearchManager.searchByDate(date);
+                    break;
+
+                case "9": // Search by Date Range (by SZA)
+                    System.out.print("Start date (YYYY-MM-DD): ");
+                    String startDate = scanner.nextLine();
+                    System.out.print("End date (YYYY-MM-DD): ");
+                    String endDate = scanner.nextLine();
+                    SearchManager.searchByDateRange(startDate, endDate);
+                    break;
 
                 default:
                     System.out.println("Invalid option.");
@@ -81,38 +108,36 @@ public class Main {
         }
     }
 
-   // Helper to get date in a user-friendly way
-private static LocalDateTime promptForDate(Scanner sc, String label) {
-    System.out.println("--- Enter " + label + " ---");
-    
-    int year = 0, month = 0, day = 0, hour = 0, minute = 0;
-    
-    // We use a loop for each part to ensure valid input
-    while (true) {
-        try {
-            System.out.print("  Year (e.g., 2025): ");
-            year = Integer.parseInt(sc.nextLine());
-            
-            System.out.print("  Month (1-12): ");
-            month = Integer.parseInt(sc.nextLine());
-            
-            System.out.print("  Day (1-31): ");
-            day = Integer.parseInt(sc.nextLine());
-            
-            System.out.print("  Hour (0-23): ");
-            hour = Integer.parseInt(sc.nextLine());
-            
-            System.out.print("  Minute (0-59): ");
-            minute = Integer.parseInt(sc.nextLine());
-            
-            // Try to build the date object
-            return LocalDateTime.of(year, month, day, hour, minute);
-            
-        } catch (NumberFormatException e) {
-            System.out.println("  Invalid number! Please try again.");
-        } catch (Exception e) {
-            System.out.println("  Invalid date (e.g., Feb 30 doesn't exist). Try again.");
+    // Helper to get date in a user-friendly way
+    private static LocalDateTime promptForDate(Scanner sc, String label) {
+        System.out.println("--- Enter " + label + " ---");
+        
+        int year = 0, month = 0, day = 0, hour = 0, minute = 0;
+        
+        while (true) {
+            try {
+                System.out.print("  Year (e.g., 2025): ");
+                year = Integer.parseInt(sc.nextLine());
+                
+                System.out.print("  Month (1-12): ");
+                month = Integer.parseInt(sc.nextLine());
+                
+                System.out.print("  Day (1-31): ");
+                day = Integer.parseInt(sc.nextLine());
+                
+                System.out.print("  Hour (0-23): ");
+                hour = Integer.parseInt(sc.nextLine());
+                
+                System.out.print("  Minute (0-59): ");
+                minute = Integer.parseInt(sc.nextLine());
+                
+                return LocalDateTime.of(year, month, day, hour, minute);
+                
+            } catch (NumberFormatException e) {
+                System.out.println("  Invalid number! Please try again.");
+            } catch (Exception e) {
+                System.out.println("  Invalid date (e.g., Feb 30 doesn't exist). Try again.");
+            }
         }
     }
-}
 }
