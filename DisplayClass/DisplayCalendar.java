@@ -35,6 +35,18 @@ public class DisplayCalendar {
                     date.getDayOfMonth(),
                     date.getMonthValue(), 
                     date.getYear());
+            boolean hasEvent = false;
+
+            for(Event e : evenList){
+                if(e.getStartDateTime().toLocalDate().equals(date)){
+                    System.out.println(" " + e.getStartDateTime().toLocalTime()
+                                       + " - " + e.getTitle());
+                    hasEvent = true;
+                }
+            }
+            if(!hasEvent){
+                System.out.println(" No Event ");
+            }
             
             date = date.plusDays(1);
         }
