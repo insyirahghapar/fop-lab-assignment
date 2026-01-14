@@ -1,4 +1,5 @@
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +7,15 @@ import java.util.Scanner;
 
 public class EventManager {
     private static final String FILE_NAME = "event.csv";
+    private static final String RECURRENT_FILE = "recurrent.csv";
     private List<Event> eventList;
+    private List<Recurrence> recurrenceList;
 
     public EventManager() {
         this.eventList = new ArrayList<>();
+        this.recurrenceList = new ArrayList<>();
         loadEvents(); // Load existing data when program starts
+        loadRecurrences(); // Load recurrence rules on startup
     }
 
     // --- REQUIREMENT 1: EVENT CREATION ---
@@ -80,6 +85,20 @@ public class EventManager {
         }
     }
 
+    public void createRecurringEvent(String title, String description, LocalDateTime start, 
+                                 LocalDateTime end, String interval, int times, LocalDate endDate) {
+    
+        // 1. Create the base event first to get an ID
+        createEvent(title, description, start, end);
+        int newId = eventList.get(eventList.size() - 1).getId();
+
+        // 2. Create the recurrence rule linked by that ID 
+        Recurrence newRec = new Recurrence(newId, interval, times, endDate);
+        recurrenceList.add(newRec);
+    
+        saveRecurrences(); // Persist to recurrent.csv 
+        System.out.println("Recurrence rule added for Event ID: " + newId);
+    }
     // --- FILE I/O OPERATIONS ---
     
     // Load events from CSV to Memory (ArrayList)
@@ -108,6 +127,26 @@ public class EventManager {
             System.out.println("Error loading events: " + e.getMessage());
         }
     }
+    private void loadRecurrences() {
+        File file = new File(RECURRENT_FILE);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            br.readLine(); // Skip header [cite: 19]
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                int id = Integer.parseInt(data[0].trim());
+                String interval = data[1].trim();
+                int times = Integer.parseInt(data[2].trim());
+                LocalDate endD = data[3].trim().equals("0") ? null : LocalDate.parse(data[3].trim());
+            
+                recurrenceList.add(new Recurrence(id, interval, times, endD));
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading recurrences: " + e.getMessage());
+        }
+    }
 
     // Save Memory (ArrayList) to CSV
     private void saveEvents() {
@@ -125,3 +164,15 @@ public class EventManager {
         }
     }
 }
+    private void saveRecurrences() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(RECURRENT_FILE))) {
+            bw.write("eventId,recurrentInterval,recurrentTimes,recurrentEndDate");
+            bw.newLine();
+            for (Recurrence r : recurrenceList) {
+                bw.write(r.toCSV());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving recurrences: " + e.getMessage());
+        }
+    }
