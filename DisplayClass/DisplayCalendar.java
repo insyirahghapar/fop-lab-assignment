@@ -3,13 +3,15 @@
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.WeekFields;
+import java.util.List;
 
 public class DisplayCalendar {
     private int year;
     private int weekNumber;
     private int monthNumber;
+    private EventManager manager;
 
-    public DisplayCalendar(int year, int weekNumber, int monthNumber) {
+    public DisplayCalendar(int year, int weekNumber, int monthNumber, EventManager manager) {
         //checking invalid inputs
         if(year < 0 || weekNumber < 0 || weekNumber > 52 || monthNumber < 0 || monthNumber > 12){
             throw new IllegalArgumentException("Invalid input of year, week number or month number.");
@@ -17,6 +19,7 @@ public class DisplayCalendar {
         this.year = year;
         this.weekNumber = weekNumber;
         this.monthNumber = monthNumber;
+        this.manager = manager;
         }
     }
 
@@ -30,6 +33,7 @@ public class DisplayCalendar {
         }
         date = date.with(weekFields.dayOfWeek(),1);
         System.out.println("Week " + weekNumber + " of " + year);
+        List<Event> events = manager.getAllEvents();
         for(int i = 0; i < 7; i++){
             System.out.printf("%-10s %02d/%02d/%d%n",date.getDayOfWeek(),
                     date.getDayOfMonth(),
@@ -37,7 +41,7 @@ public class DisplayCalendar {
                     date.getYear());
             boolean hasEvent = false;
 
-            for(Event e : evenList){
+            for(Event e : events){
                 if(e.getStartDateTime().toLocalDate().equals(date)){
                     System.out.println(" " + e.getStartDateTime().toLocalTime()
                                        + " - " + e.getTitle());
@@ -64,15 +68,38 @@ public class DisplayCalendar {
         int index = startDay - 1;
         
         System.out.println(month + " " + year);
+        List<Event> events = manager.getAllEvents();
         System.out.println("Mon Tue Wed Thu Fri Sat Sun");
         for(int i = 0; i < index; i++){
             System.out.print("    ");
         }
         for(int day = 1; day <= totalDay; day++){
-            System.out.printf("%3d ",day);
-        
-            if((day + index)%7 == 0){
-                System.out.println("");
+            LocalDate current = LocalDate.of(year, monthNumber, day);
+            
+        boolean hasEvent = false;
+        for(Event e : events){
+                if(e.getStartDateTime().toLocalDate().equals(current)){
+                    hasEvent = true;
+                    break;
+                }
+            }
+            if(hasEvent){
+                System.out.printf("%2d* ", day);
+            }else{
+                System.out.printf("%2d  ", day);
+            }
+            
+            if((day+index)%7 == 0){
+                System.out.println();
+            }
+        }
+        System.out.println("\nEvents: ");
+        for(Event e : events){
+            if(e.getStartDateTime().getYear() == year && 
+                    e.getStartDateTime().getMonthValue() == monthNumber){
+                System.out.println(e.getStartDateTime().toLocalDate() + " "
+                + e.getStartDateTime().toLocalTime()
+                + " - " + e.getTitle());
             }
         }
 
