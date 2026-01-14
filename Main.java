@@ -23,16 +23,16 @@ public class Main {
             System.out.println("10. Search by Date");
             System.out.println("11. Search by Date Range");
             System.out.print("Choose an option: ");
-            input = scanner.nextLine();
+            option = scanner.nextLine();
 
-            switch (input) {
+            switch (option) {
                 case "1"://view calendar by week
                      while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = input.nextInt();
+                    int year = scanner.nextInt();
                     System.out.print("Enter week number (1 - 52): ");
-                    int week = input.nextInt();     
+                    int week = scanner.nextInt();     
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0);
                     displayCalendar.displayWeek(week);
                     break;
@@ -46,9 +46,9 @@ public class Main {
                     while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = input.nextInt();
+                    int year = scanner.nextInt();
                     System.out.print("Enter month number (1 - 12): ");
-                    int month = input.nextInt();     
+                    int month = scanner.nextInt();     
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month);
                     displayCalendar.displayMonthly(month,year);
                     break;
