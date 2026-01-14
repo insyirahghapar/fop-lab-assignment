@@ -12,7 +12,7 @@ public class ReminderManager {
     }
 
     public void checkAllReminders() {
-        System.out.println("\n=== 🔔 Event Reminder Check 🔔 ===");
+        System.out.println("\n=== Event Reminder Check ===");
         LocalDateTime now = LocalDateTime.now();
         List<Event> allEvents = eventManager.listAllEvents();
         boolean hasRemind = false;
@@ -21,16 +21,17 @@ public class ReminderManager {
             if (event.getStartDateTime().isAfter(now) && event.getReminderLeadTime() > 0) {
                 long leftMinutes = Duration.between(now, event.getStartDateTime()).toMinutes();
                 if (leftMinutes <= event.getReminderLeadTime()) {
-                    System.out.println("\n📅 Upcoming Event Alert:");
+                    System.out.println("\n Upcoming Event Alert:");
                     System.out.println(event);
-                    System.out.println("⏰ Time Left: " + leftMinutes + " minutes");
+                    System.out.println("Time Left: " + leftMinutes + " minutes");
                     hasRemind = true;
                 }
             }
         }
         if (!hasRemind) {
-            System.out.println("✅ No upcoming event reminders.");
+            System.out.println("No upcoming event reminders.");
         }
         System.out.println("===================================\n");
     }
 }
+
