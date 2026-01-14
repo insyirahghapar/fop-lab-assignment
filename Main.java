@@ -22,17 +22,18 @@ public class Main {
             System.out.println("9. Restore Data");
             System.out.println("10. Search by Date");
             System.out.println("11. Search by Date Range");
+            System.out.println("12. Advanced Search");
             System.out.print("Choose an option: ");
-            option = scanner.nextLine();
+            input = scanner.nextLine();
 
-            switch (option) {
+            switch (input) {
                 case "1"://view calendar by week
                      while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = scanner.nextInt();
+                    int year = input.nextInt();
                     System.out.print("Enter week number (1 - 52): ");
-                    int week = scanner.nextInt();     
+                    int week = input.nextInt();     
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0);
                     displayCalendar.displayWeek(week);
                     break;
@@ -46,9 +47,9 @@ public class Main {
                     while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = scanner.nextInt();
+                    int year = input.nextInt();
                     System.out.print("Enter month number (1 - 12): ");
-                    int month = scanner.nextInt();     
+                    int month = input.nextInt();     
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month);
                     displayCalendar.displayMonthly(month,year);
                     break;
@@ -136,11 +137,42 @@ public class Main {
                     SearchManager.searchByDateRange(startDate, endDate);
                     break;
 
-                default:
-                    System.out.println("Invalid option.");
-            }
-        }
-    }
+                case "12":
+                    EventManager eventManager = new EventManager();
+                    List<Event> events = eventManager.getEventList(); 
+
+                    Scanner sc = new Scanner(System.in);
+                    EventSearchCriteria criteria = new EventSearchCriteria();
+
+                    System.out.print("Search by Event ID (press Enter to skip): ");
+                    String idInput = sc.nextLine();
+                    if (!idInput.isEmpty()) {
+                        criteria.setId(Integer.parseInt(idInput));
+                    }
+
+                    System.out.print("Search by Title (press Enter to skip): ");
+                    criteria.setTitle(sc.nextLine());
+
+                    System.out.print("Search by Description (press Enter to skip): ");
+                    criteria.setDescription(sc.nextLine());
+
+                    List<Event> results =
+                            EventAdvancedSearch.search(events, criteria);
+
+                    System.out.println("\n--- Advanced Search Results ---");
+                    if (results.isEmpty()) {
+                        System.out.println("No matching events found.");
+                    } else {
+                        for (Event e : results) {
+                            System.out.println(e);
+                        }
+                    }
+
+                    default:
+                        System.out.println("Invalid option.");
+                        }
+                    }
+                }
 
     // Helper to get date in a user-friendly way
     private static LocalDateTime promptForDate(Scanner sc, String label) {
