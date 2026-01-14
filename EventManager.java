@@ -18,10 +18,28 @@ public class EventManager {
         loadRecurrences(); // Load recurrence rules on startup
     }
 
+    public boolean isConflicting(LocalDateTime newStart, LocalDateTime newEnd) {
+        for (Event existingEvent : eventList) {
+            // a conflict occurs if:
+            // (NewStart < ExistingEnd) AND (NewEnd > ExistingStart)
+            if (newStart.isBefore(existingEvent.getEndDateTime()) && 
+                newEnd.isAfter(existingEvent.getStartDateTime())) {
+            
+                System.out.println("Conflict Detected with Event: " + existingEvent.getTitle());
+                return true; // there is a clash
+            }
+        }
+        return false; // no clash found
+    }
+
     // --- REQUIREMENT 1: EVENT CREATION ---
     public void createEvent(String title, String description, LocalDateTime start, LocalDateTime end) {
-        Event newEvent = new Event(title, description, start, end);
+        if (isConflicting(start, end)) {
+            System.out.println("Could not create event. Time slot is already occupied.");
+            return; // Stop the method here
+        }
         
+        Event newEvent = new Event(title, description, start, end);
         // Auto-Increment Logic: Find max ID and add 1
         int maxId = 0;
         for (Event e : eventList) {
@@ -88,15 +106,15 @@ public class EventManager {
     public void createRecurringEvent(String title, String description, LocalDateTime start, 
                                  LocalDateTime end, String interval, int times, LocalDate endDate) {
     
-        // 1. Create the base event first to get an ID
+        // create the base event first to get an ID
         createEvent(title, description, start, end);
         int newId = eventList.get(eventList.size() - 1).getId();
 
-        // 2. Create the recurrence rule linked by that ID 
+        // create the recurrence rule linked by that ID 
         Recurrence newRec = new Recurrence(newId, interval, times, endDate);
         recurrenceList.add(newRec);
     
-        saveRecurrences(); // Persist to recurrent.csv 
+        saveRecurrences(); // persist to recurrent.csv 
         System.out.println("Recurrence rule added for Event ID: " + newId);
     }
     // --- FILE I/O OPERATIONS ---
@@ -132,7 +150,7 @@ public class EventManager {
         if (!file.exists()) return;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            br.readLine(); // Skip header [cite: 19]
+            br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
@@ -163,8 +181,7 @@ public class EventManager {
             System.out.println("Error saving events: " + e.getMessage());
         }
     }
-}
-    private void saveRecurrences() {
+     private void saveRecurrences() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(RECURRENT_FILE))) {
             bw.write("eventId,recurrentInterval,recurrentTimes,recurrentEndDate");
             bw.newLine();
@@ -176,3 +193,5 @@ public class EventManager {
             System.out.println("Error saving recurrences: " + e.getMessage());
         }
     }
+}
+
