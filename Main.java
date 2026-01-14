@@ -31,10 +31,10 @@ public class Main {
                      while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = input.nextInt();
+                    int year = scanner.nextInt();
                     System.out.print("Enter week number (1 - 52): ");
-                    int week = input.nextInt();     
-                    DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0);
+                    int week = scanner.nextInt();     
+                    DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0,manager);
                     displayCalendar.displayWeek(week);
                     break;
                 }
@@ -47,10 +47,10 @@ public class Main {
                     while(true){
                 try{
                     System.out.print("Enter year: ");
-                    int year = input.nextInt();
+                    int year = scanner.nextInt();
                     System.out.print("Enter month number (1 - 12): ");
-                    int month = input.nextInt();     
-                    DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month);
+                    int month = scanner.nextInt();     
+                    DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month,manager);
                     displayCalendar.displayMonthly(month,year);
                     break;
                 }
@@ -207,3 +207,4 @@ public class Main {
         }
     }
 }
+
