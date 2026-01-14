@@ -11,20 +11,54 @@ public class Main {
 
         while (true) {
             System.out.println("\n--- MENU ---");
-            System.out.println("1. Create Event");
-            System.out.println("2. View All Events");
-            System.out.println("3. Update Event");
-            System.out.println("4. Delete Event");
-            System.out.println("5. Exit");
-            System.out.println("6. Backup Data");
-            System.out.println("7. Restore Data");
-            System.out.println("8. Search by Date");
-            System.out.println("9. Search by Date Range");
+            System.out.println("1. View Calendar by Week");
+            System.out.println("2. View Calender by Month");
+            System.out.println("3. Create Event");
+            System.out.println("4. View All Events");
+            System.out.println("5. Update Event");
+            System.out.println("6. Delete Event");
+            System.out.println("7. Exit");
+            System.out.println("8. Backup Data");
+            System.out.println("9. Restore Data");
+            System.out.println("10. Search by Date");
+            System.out.println("11. Search by Date Range");
             System.out.print("Choose an option: ");
             input = scanner.nextLine();
 
             switch (input) {
-                case "1": // Create
+                case "1"://view calendar by week
+                     while(true){
+                try{
+                    System.out.print("Enter year: ");
+                    int year = input.nextInt();
+                    System.out.print("Enter week number (1 - 52): ");
+                    int week = input.nextInt();     
+                    DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0);
+                    displayCalendar.displayWeek(week);
+                    break;
+                }
+                catch(IllegalArgumentException e){
+                    System.out.println(e.getMessage() + " Please try again.");
+                }}
+                break;
+
+                case "2"://view calendar by month
+                    while(true){
+                try{
+                    System.out.print("Enter year: ");
+                    int year = input.nextInt();
+                    System.out.print("Enter month number (1 - 12): ");
+                    int month = input.nextInt();     
+                    DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month);
+                    displayCalendar.displayMonthly(month,year);
+                    break;
+                }
+                catch(IllegalArgumentException e){
+                    System.out.println(e.getMessage() + " Please try again.");
+                }}
+                break;
+
+                case "3": // Create
                     System.out.print("Enter Title: ");
                     String title = scanner.nextLine();
                     System.out.print("Enter Description: ");
@@ -37,11 +71,11 @@ public class Main {
                     }
                     break;
 
-                case "2": // Read
+                case "4": // Read
                     manager.listAllEvents();
                     break;
 
-                case "3": // Update
+                case "5": // Update
                     manager.listAllEvents();
                     System.out.print("Enter Event ID to update: ");
                     try {
@@ -63,7 +97,7 @@ public class Main {
                     }
                     break;
 
-                case "4": // Delete
+                case "6": // Delete
                     manager.listAllEvents();
                     System.out.print("Enter Event ID to delete: ");
                     try {
@@ -74,27 +108,27 @@ public class Main {
                     }
                     break;
 
-                case "5": // Exit
+                case "7": // Exit
                     System.out.println("Exiting...");
                     return;
 
-                case "6": // Backup Data (by SZA)
+                case "8": // Backup Data (by SZA)
                     FileManager.createBackup();
                     break;
 
-                case "7": // Restore Data (by SZA)
+                case "9": // Restore Data (by SZA)
                     System.out.print("Enter backup folder name: ");
                     String folderName = scanner.nextLine();
                     FileManager.restoreFromBackup(folderName);
                     break;
 
-                case "8": // Search by Date (by SZA)
+                case "10": // Search by Date (by SZA)
                     System.out.print("Enter date (YYYY-MM-DD): ");
                     String date = scanner.nextLine();
                     SearchManager.searchByDate(date);
                     break;
 
-                case "9": // Search by Date Range (by SZA)
+                case "11": // Search by Date Range (by SZA)
                     System.out.print("Start date (YYYY-MM-DD): ");
                     String startDate = scanner.nextLine();
                     System.out.print("End date (YYYY-MM-DD): ");
