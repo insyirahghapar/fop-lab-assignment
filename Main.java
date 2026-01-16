@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.util.list;
 
 public class Main {
     public static void main(String[] args) {
@@ -139,7 +140,7 @@ public class Main {
 
                 case "12":
                     EventManager eventManager = new EventManager();
-                    List<Event> events = eventManager.getEventList(); 
+                    List<Event> events = eventManager.getAllEvents(); 
 
                     Scanner sc = new Scanner(System.in);
                     EventSearchCriteria criteria = new EventSearchCriteria();
@@ -207,4 +208,5 @@ public class Main {
         }
     }
 }
+
 
