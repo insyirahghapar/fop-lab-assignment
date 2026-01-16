@@ -10,15 +10,14 @@ public class Main {
 
         System.out.println("Welcome to the Calendar App!");
 
-//
+        // Reminder check
         ReminderManager reminderManager = new ReminderManager(manager);
         reminderManager.checkAllReminders();
-//
 
         while (true) {
             System.out.println("\n--- MENU ---");
             System.out.println("1. View Calendar by Week");
-            System.out.println("2. View Calender by Month");
+            System.out.println("2. View Calendar by Month");
             System.out.println("3. Create Event");
             System.out.println("4. View All Events");
             System.out.println("5. Update Event");
@@ -29,57 +28,55 @@ public class Main {
             System.out.println("10. Search by Date");
             System.out.println("11. Search by Date Range");
             System.out.println("12. Advanced Search");
-//
             System.out.println("13. Check Event Reminders");
-//
             System.out.print("Choose an option: ");
             input = scanner.nextLine();
 
             switch (input) {
-                case "1"://view calendar by week
-                     while(true){
-                try{
-                    System.out.print("Enter year: ");
-                    int year = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Enter week number (1 - 52): ");
-                    int week = scanner.nextInt();  
-                    scanner.nextLine();   
-                    DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0,manager);
-                    displayCalendar.displayWeek(week);
+                case "1": // View Calendar by Week
+                    while (true) {
+                        try {
+                            System.out.print("Enter year: ");
+                            int year = Integer.parseInt(scanner.nextLine());
+                            System.out.print("Enter week number (1 - 52): ");
+                            int week = Integer.parseInt(scanner.nextLine());
+                            DisplayCalendar displayCalendar = new DisplayCalendar(year, week, 0, manager);
+                            displayCalendar.displayWeek(week);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid number. Please try again.");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage() + " Please try again.");
+                        }
+                    }
                     break;
-                }
-                catch(IllegalArgumentException e){
-                    System.out.println(e.getMessage() + " Please try again.");
-                }}
-                break;
 
-                case "2"://view calendar by month
-                    while(true){
-                try{
-                    System.out.print("Enter year: ");
-                    int year = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Enter month number (1 - 12): ");
-                    int month = scanner.nextInt();  
-                    scanner.nextLine();   
-                    DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month,manager);
-                    displayCalendar.displayMonthly(month,year);
+                case "2": // View Calendar by Month
+                    while (true) {
+                        try {
+                            System.out.print("Enter year: ");
+                            int year = Integer.parseInt(scanner.nextLine());
+                            System.out.print("Enter month number (1 - 12): ");
+                            int month = Integer.parseInt(scanner.nextLine());
+                            DisplayCalendar displayCalendar = new DisplayCalendar(year, 0, month, manager);
+                            displayCalendar.displayMonthly(month, year);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid number. Please try again.");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage() + " Please try again.");
+                        }
+                    }
                     break;
-                }
-                catch(IllegalArgumentException e){
-                    System.out.println(e.getMessage() + " Please try again.");
-                }}
-                break;
 
-                case "3": // Create
+                case "3": // Create Event
                     System.out.print("Enter Title: ");
                     String title = scanner.nextLine();
                     System.out.print("Enter Description: ");
                     String desc = scanner.nextLine();
                     LocalDateTime start = promptForDate(scanner, "Start (yyyy-MM-ddTHH:mm:ss): ");
                     LocalDateTime end = promptForDate(scanner, "End   (yyyy-MM-ddTHH:mm:ss): ");
-//
+
                     System.out.print("Enter Location (optional): ");
                     String location = scanner.nextLine();
                     System.out.print("Enter Attendees (optional, comma-separated): ");
@@ -93,21 +90,17 @@ public class Main {
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input, reminder set to 0 minutes");
                     }
-//
+
                     if (start != null && end != null) {
-//
                         manager.createEvent(title, desc, start, end, location, attendees, category, reminderLeadTime);
-//
-                        // original one
-                        // manager.createEvent(title, desc, start, end);
                     }
                     break;
 
-                case "4": // Read
+                case "4": // View All Events
                     manager.listAllEvents();
                     break;
 
-                case "5": // Update
+                case "5": // Update Event
                     manager.listAllEvents();
                     System.out.print("Enter Event ID to update: ");
                     try {
@@ -120,7 +113,7 @@ public class Main {
                             String newDesc = scanner.nextLine();
                             LocalDateTime newStart = promptForDate(scanner, "New Start: ");
                             LocalDateTime newEnd = promptForDate(scanner, "New End: ");
-//
+
                             System.out.print("New Location (" + existing.getLocation() + "): ");
                             String newLocation = scanner.nextLine();
                             System.out.print("New Attendees (" + existing.getAttendees() + "): ");
@@ -137,11 +130,8 @@ public class Main {
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid input, keeping original reminder time");
                             }
-//
+
                             manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd, newLocation, newAttendees, newCategory, newReminderLeadTime);
-//
-                            // original one
-                            // manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd);
                         } else {
                             System.out.println("ID not found.");
                         }
@@ -150,7 +140,7 @@ public class Main {
                     }
                     break;
 
-                case "6": // Delete
+                case "6": // Delete Event
                     manager.listAllEvents();
                     System.out.print("Enter Event ID to delete: ");
                     try {
@@ -189,27 +179,27 @@ public class Main {
                     SearchManager.searchByDateRange(startDate, endDate);
                     break;
 
-                case "12":
-                    EventManager eventManager = new EventManager();
-                    List<Event> events = eventManager.getAllEvents(); 
-
-                    Scanner sc = new Scanner(System.in);
+                case "12": // Advanced Search
+                    List<Event> events = manager.getAllEvents();
                     EventSearchCriteria criteria = new EventSearchCriteria();
 
                     System.out.print("Search by Event ID (press Enter to skip): ");
-                    String idInput = sc.nextLine();
+                    String idInput = scanner.nextLine();
                     if (!idInput.isEmpty()) {
-                        criteria.setId(Integer.parseInt(idInput));
+                        try {
+                            criteria.setId(Integer.parseInt(idInput));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid ID format.");
+                        }
                     }
 
                     System.out.print("Search by Title (press Enter to skip): ");
-                    criteria.setTitle(sc.nextLine());
+                    criteria.setTitle(scanner.nextLine());
 
                     System.out.print("Search by Description (press Enter to skip): ");
-                    criteria.setDescription(sc.nextLine());
+                    criteria.setDescription(scanner.nextLine());
 
-                    List<Event> results =
-                            EventAdvancedSearch.search(events, criteria);
+                    List<Event> results = EventAdvancedSearch.search(events, criteria);
 
                     System.out.println("\n--- Advanced Search Results ---");
                     if (results.isEmpty()) {
@@ -220,12 +210,10 @@ public class Main {
                         }
                     }
                     break;
-//
-                case "13": // Check Event Reminders
 
+                case "13": // Check Event Reminders
                     reminderManager.checkAllReminders();
                     break;
-//
 
                 default:
                     System.out.println("Invalid option.");
