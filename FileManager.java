@@ -35,7 +35,7 @@ public class FileManager {
             return true;
         } catch (IOException e) {
             System.out.println("Error during restore: " + e.getMessage());
-            return false
+            return false;
         }
     }
 }
