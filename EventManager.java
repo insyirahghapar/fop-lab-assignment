@@ -58,6 +58,36 @@ public class EventManager {
         System.out.println("Event created successfully with ID: " + newEvent.getId());
     }
 
+//
+    // 重载createEvent：支持附加字段和提醒时间
+    public void createEvent(String title, String description, LocalDateTime start, LocalDateTime end,
+                       String location, String attendees, String category, int reminderLeadTime) {
+        if (isConflicting(start, end)) {
+            System.out.println("Could not create event. Time slot is already occupied.");
+            return; // Stop the method here
+        }
+        
+        Event newEvent = new Event(title, description, start, end);
+        // Auto-Increment Logic: Find max ID and add 1
+        int maxId = 0;
+        for (Event e : eventList) {
+            if (e.getId() > maxId) {
+                maxId = e.getId();
+            }
+        }
+        newEvent.setId(maxId + 1);
+//
+        newEvent.setLocation(location);
+        newEvent.setAttendees(attendees);
+        newEvent.setCategory(category);
+        newEvent.setReminderLeadTime(reminderLeadTime);
+        
+        eventList.add(newEvent);
+        saveEvents(); // Persist to file immediately
+        System.out.println("Event created successfully with ID: " + newEvent.getId());
+    }
+//
+
     // --- REQUIREMENT 2: EVENT UPDATE ---
     public void updateEvent(int id, String newTitle, String newDesc, LocalDateTime newStart, LocalDateTime newEnd) {
         Event eventToUpdate = findEventById(id);
@@ -72,6 +102,28 @@ public class EventManager {
             System.out.println("Error: Event ID " + id + " not found.");
         }
     }
+
+//
+    public void updateEvent(int id, String newTitle, String newDesc, LocalDateTime newStart, LocalDateTime newEnd,
+                       String newLocation, String newAttendees, String newCategory, int newReminderLeadTime) {
+        Event eventToUpdate = findEventById(id);
+        if (eventToUpdate != null) {
+            eventToUpdate.setTitle(newTitle);
+            eventToUpdate.setDescription(newDesc);
+            eventToUpdate.setStartDateTime(newStart);
+            eventToUpdate.setEndDateTime(newEnd);
+            // 更新附加字段和提醒时间
+            eventToUpdate.setLocation(newLocation);
+            eventToUpdate.setAttendees(newAttendees);
+            eventToUpdate.setCategory(newCategory);
+            eventToUpdate.setReminderLeadTime(newReminderLeadTime);
+            saveEvents(); // Update file
+            System.out.println("Event ID " + id + " updated successfully.");
+        } else {
+            System.out.println("Error: Event ID " + id + " not found.");
+        }
+    }
+//
 
     // --- REQUIREMENT 2: EVENT DELETE ---
     public void deleteEvent(int id) {
@@ -121,6 +173,7 @@ public class EventManager {
         saveRecurrences(); // persist to recurrent.csv 
         System.out.println("Recurrence rule added for Event ID: " + newId);
     }
+    
     // --- FILE I/O OPERATIONS ---
     
     // Load events from CSV to Memory (ArrayList)
@@ -142,13 +195,27 @@ public class EventManager {
                     LocalDateTime start = LocalDateTime.parse(data[3], Event.FORMATTER);
                     LocalDateTime end = LocalDateTime.parse(data[4], Event.FORMATTER);
                     
-                    eventList.add(new Event(id, title, desc, start, end));
+                    Event event = new Event(id, title, desc, start, end);
+//
+                    if (data.length >= 6) event.setLocation(data[5].trim());
+                    if (data.length >= 7) event.setAttendees(data[6].trim());
+                    if (data.length >= 8) event.setCategory(data[7].trim());
+                    if (data.length >= 9) {
+                        try {
+                            event.setReminderLeadTime(Integer.parseInt(data[8].trim()));
+                        } catch (NumberFormatException e) {
+                            event.setReminderLeadTime(0);
+                        }
+                    }
+//
+                    eventList.add(event);
                 }
             }
         } catch (IOException e) {
             System.out.println("Error loading events: " + e.getMessage());
         }
     }
+    
     private void loadRecurrences() {
         File file = new File(RECURRENT_FILE);
         if (!file.exists()) return;
@@ -174,7 +241,11 @@ public class EventManager {
     private void saveEvents() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME))) {
             // Write Header
-            bw.write("eventId,title,description,startDateTime,endDateTime");
+//
+            bw.write("eventId,title,description,startDateTime,endDateTime,location,attendees,category,reminderLeadTime");
+//
+            // original one
+            // bw.write("eventId,title,description,startDateTime,endDateTime");
             bw.newLine();
             
             for (Event e : eventList) {
@@ -185,7 +256,8 @@ public class EventManager {
             System.out.println("Error saving events: " + e.getMessage());
         }
     }
-     private void saveRecurrences() {
+    
+    private void saveRecurrences() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(RECURRENT_FILE))) {
             bw.write("eventId,recurrentInterval,recurrentTimes,recurrentEndDate");
             bw.newLine();
@@ -198,5 +270,3 @@ public class EventManager {
         }
     }
 }
-
-
