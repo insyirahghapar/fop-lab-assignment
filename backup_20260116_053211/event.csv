@@ -1,0 +1,3 @@
+eventId,title,description,startDateTime,endDateTime,location,attendees,category,reminderLeadTime
+1,Meeting,final project,2026-01-14T15:00:00,2026-01-14T19:00:00,null,null,null,0
+2,Zoe birthday,Its Zoe's birthday!!!,2026-01-17T00:00:00,2026-01-18T00:00:00,library,zoe,inshi,gong,party,10
