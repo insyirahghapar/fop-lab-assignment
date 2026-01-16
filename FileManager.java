@@ -27,13 +27,15 @@ public class FileManager {
         }
     }
 
-    public static void restoreFromBackup(String folderName) {
+    public static boolean restoreFromBackup(String folderName) {
         try {
             Files.copy(Paths.get(folderName, "event.csv"), Paths.get("event.csv"), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(Paths.get(folderName, "recurrent.csv"), Paths.get("recurrent.csv"), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("Restore completed from " + folderName);
+            return true;
         } catch (IOException e) {
             System.out.println("Error during restore: " + e.getMessage());
+            return false
         }
     }
 }
