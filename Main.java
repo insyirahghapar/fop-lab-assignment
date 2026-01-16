@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.list;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -208,5 +208,6 @@ public class Main {
         }
     }
 }
+
 
 
