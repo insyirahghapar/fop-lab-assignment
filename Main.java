@@ -199,6 +199,9 @@ public class Main {
                     System.out.print("Search by Description (press Enter to skip): ");
                     criteria.setDescription(scanner.nextLine());
 
+                    System.out.print("Search by Location (press Enter to skip): ");
+                    criteria.setLocation(scanner.nextLine());
+
                     List<Event> results = EventAdvancedSearch.search(events, criteria);
 
                     System.out.println("\n--- Advanced Search Results ---");
