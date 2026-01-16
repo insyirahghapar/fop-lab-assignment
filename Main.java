@@ -162,7 +162,12 @@ public class Main {
                 case "9": // Restore Data (by SZA)
                     System.out.print("Enter backup folder name: ");
                     String folderName = scanner.nextLine();
-                    FileManager.restoreFromBackup(folderName);
+                    boolean restoreSuccess = FileManager.restoreFromBackup(folderName);
+                    if (restoreSuccess) {
+                        manager = new EventManager(); 
+                        reminderManager = new ReminderManager(manager); 
+                        System.out.println("✅ Data reloaded successfully!");
+                      }
                     break;
 
                 case "10": // Search by Date (by SZA)
@@ -257,3 +262,4 @@ public class Main {
         }
     }
 }
+
