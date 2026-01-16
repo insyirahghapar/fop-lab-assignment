@@ -1,5 +1,3 @@
-package ReminderManager;
-
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.List;
@@ -14,7 +12,7 @@ public class ReminderManager {
     public void checkAllReminders() {
         System.out.println("\n=== Event Reminder Check ===");
         LocalDateTime now = LocalDateTime.now();
-        List<Event> allEvents = eventManager.listAllEvents();
+        List<Event> allEvents = eventManager.getAllEvents();
         boolean hasRemind = false;
 
         for (Event event : allEvents) {
@@ -34,4 +32,5 @@ public class ReminderManager {
         System.out.println("===================================\n");
     }
 }
+
 
