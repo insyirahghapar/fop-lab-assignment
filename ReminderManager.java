@@ -29,8 +29,9 @@ public class ReminderManager {
         if (!hasRemind) {
             System.out.println("No upcoming event reminders.");
         }
-        System.out.println("===================================\n");
+        System.out.println("============================\n");
     }
 }
+
 
 
