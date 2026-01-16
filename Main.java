@@ -10,6 +10,11 @@ public class Main {
 
         System.out.println("Welcome to the Calendar App!");
 
+//
+        ReminderManager reminderManager = new ReminderManager(manager);
+        reminderManager.checkAllReminders();
+//
+
         while (true) {
             System.out.println("\n--- MENU ---");
             System.out.println("1. View Calendar by Week");
@@ -24,6 +29,9 @@ public class Main {
             System.out.println("10. Search by Date");
             System.out.println("11. Search by Date Range");
             System.out.println("12. Advanced Search");
+//
+            System.out.println("13. Check Event Reminders");
+//
             System.out.print("Choose an option: ");
             input = scanner.nextLine();
 
@@ -67,9 +75,27 @@ public class Main {
                     String desc = scanner.nextLine();
                     LocalDateTime start = promptForDate(scanner, "Start (yyyy-MM-ddTHH:mm:ss): ");
                     LocalDateTime end = promptForDate(scanner, "End   (yyyy-MM-ddTHH:mm:ss): ");
-                    
+//
+                    System.out.print("Enter Location (optional): ");
+                    String location = scanner.nextLine();
+                    System.out.print("Enter Attendees (optional, comma-separated): ");
+                    String attendees = scanner.nextLine();
+                    System.out.print("Enter Category (optional): ");
+                    String category = scanner.nextLine();
+                    System.out.print("Enter Reminder Lead Time (minutes, 0 for none): ");
+                    int reminderLeadTime = 0;
+                    try {
+                        reminderLeadTime = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input, reminder set to 0 minutes");
+                    }
+//
                     if (start != null && end != null) {
-                        manager.createEvent(title, desc, start, end);
+//
+                        manager.createEvent(title, desc, start, end, location, attendees, category, reminderLeadTime);
+//
+                        // original one
+                        // manager.createEvent(title, desc, start, end);
                     }
                     break;
 
@@ -90,7 +116,28 @@ public class Main {
                             String newDesc = scanner.nextLine();
                             LocalDateTime newStart = promptForDate(scanner, "New Start: ");
                             LocalDateTime newEnd = promptForDate(scanner, "New End: ");
-                            manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd);
+//
+                            System.out.print("New Location (" + existing.getLocation() + "): ");
+                            String newLocation = scanner.nextLine();
+                            System.out.print("New Attendees (" + existing.getAttendees() + "): ");
+                            String newAttendees = scanner.nextLine();
+                            System.out.print("New Category (" + existing.getCategory() + "): ");
+                            String newCategory = scanner.nextLine();
+                            System.out.print("New Reminder Lead Time (" + existing.getReminderLeadTime() + " mins): ");
+                            int newReminderLeadTime = existing.getReminderLeadTime();
+                            try {
+                                String reminderInput = scanner.nextLine();
+                                if (!reminderInput.isEmpty()) {
+                                    newReminderLeadTime = Integer.parseInt(reminderInput);
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Invalid input, keeping original reminder time");
+                            }
+//
+                            manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd, newLocation, newAttendees, newCategory, newReminderLeadTime);
+//
+                            // original one
+                            // manager.updateEvent(updateId, newTitle, newDesc, newStart, newEnd);
                         } else {
                             System.out.println("ID not found.");
                         }
@@ -168,12 +215,19 @@ public class Main {
                             System.out.println(e);
                         }
                     }
+                    break;
+//
+                case "13": // Check Event Reminders
 
-                    default:
-                        System.out.println("Invalid option.");
-                        }
-                    }
-                }
+                    reminderManager.checkAllReminders();
+                    break;
+//
+
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
 
     // Helper to get date in a user-friendly way
     private static LocalDateTime promptForDate(Scanner sc, String label) {
@@ -208,6 +262,3 @@ public class Main {
         }
     }
 }
-
-
-
