@@ -166,7 +166,7 @@ public class Main {
                     if (restoreSuccess) {
                         manager = new EventManager(); 
                         reminderManager = new ReminderManager(manager); 
-                        System.out.println("✅ Data reloaded successfully!");
+                        System.out.println("Data reloaded successfully!");
                       }
                     break;
 
@@ -262,4 +262,5 @@ public class Main {
         }
     }
 }
+
 
