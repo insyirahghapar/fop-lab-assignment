@@ -41,9 +41,10 @@ public class Main {
                 try{
                     System.out.print("Enter year: ");
                     int year = scanner.nextInt();
-                    System.out.print("Enter week number (1 - 52): ");
-                    int week = scanner.nextInt();
                     scanner.nextLine();
+                    System.out.print("Enter week number (1 - 52): ");
+                    int week = scanner.nextInt();  
+                    scanner.nextLine();   
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,week,0,manager);
                     displayCalendar.displayWeek(week);
                     break;
@@ -58,9 +59,10 @@ public class Main {
                 try{
                     System.out.print("Enter year: ");
                     int year = scanner.nextInt();
-                    System.out.print("Enter month number (1 - 12): ");
-                    int month = scanner.nextInt();
                     scanner.nextLine();
+                    System.out.print("Enter month number (1 - 12): ");
+                    int month = scanner.nextInt();  
+                    scanner.nextLine();   
                     DisplayCalendar displayCalendar = new DisplayCalendar(year,0,month,manager);
                     displayCalendar.displayMonthly(month,year);
                     break;
@@ -264,4 +266,3 @@ public class Main {
         }
     }
 }
-
