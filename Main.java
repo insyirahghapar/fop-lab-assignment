@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.List;
 
@@ -90,11 +91,32 @@ public class Main {
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input, reminder set to 0 minutes");
                     }
+                    System.out.print("Should this event repeat? (y/n): ");
+                    String repeatChoice = scanner.nextLine().toLowerCase();
 
-                    if (start != null && end != null) {
-                        manager.createEvent(title, desc, start, end, location, attendees, category, reminderLeadTime);
+                    if (repeatChoice.equals("y")) {
+                        System.out.print("Enter interval (1d for daily, 1w for weekly, 1m for monthly): ");
+                        String interval = scanner.nextLine();
+
+                        System.out.print("Stop by (1) Number of times or (2) Specific end date? Enter 1 or 2: ");
+                        String stopChoice = scanner.nextLine();
+
+                    if (stopChoice.equals("1")) {
+                        System.out.print("Enter number of times to repeat: ");
+                        int times = Integer.parseInt(scanner.nextLine());
+                        // Call recurring creator with times (endDate is null)
+                        manager.createRecurringEvent(title, desc, start, end, location, attendees, category, reminderLeadTime, interval, times, null);
+                    } else {
+                        System.out.print("Enter end date (YYYY-MM-DD): ");
+                        LocalDate endDate = LocalDate.parse(scanner.nextLine());
+                        // Call recurring creator with end date (times is 0)
+                        manager.createRecurringEvent(title, desc, start, end, location, attendees, category, reminderLeadTime, interval, 0, endDate);
                     }
-                    break;
+                } else {
+                    // Create as a normal single event if user says 'n'
+                    manager.createEvent(title, desc, start, end, location, attendees, category, reminderLeadTime);
+                }
+                break;
 
                 case "4": // View All Events
                     manager.listAllEvents();
