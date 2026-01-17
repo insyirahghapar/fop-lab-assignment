@@ -16,6 +16,8 @@ public class EventAdvancedSearch {
             if (!matchTitle(event, criteria)) continue;
             if (!matchDescription(event, criteria)) continue;
             if (!matchLocation(event, criteria)) continue;
+            if (!matchAttendees(event, criteria)) continue;
+            if (!matchCategory(event, criteria)) continue;
 
             results.add(event);
         }
@@ -47,6 +49,7 @@ public class EventAdvancedSearch {
                 .toLowerCase()
                 .contains(c.getDescription().toLowerCase());
     }
+
     private static boolean matchLocation(Event e, EventSearchCriteria c){
         if (c.getLocation() == null || c.getLocation().isEmpty())
             return true;
@@ -54,5 +57,21 @@ public class EventAdvancedSearch {
         return e.getLocation()
                 .toLowerCase()
                 .contains(c.getLocation().toLowerCase());
+    }
+    private static boolean matchAttendees(Event e, EventSearchCriteria c){
+        if (c.getAttendees() == null || c.getAttendees().isEmpty())
+            return true;
+
+        return e.getAttendees()
+                .toLowerCase()
+                .contains(c.getAttendees().toLowerCase());
+    }
+    private static boolean matchCategory(Event e, EventSearchCriteria c){
+        if (c.getCategory() == null || c.getCategory().isEmpty())
+            return true;
+
+        return e.getCategory()
+                .toLowerCase()
+                .contains(c.getCategory().toLowerCase());
     }
 }

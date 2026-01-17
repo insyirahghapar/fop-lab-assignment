@@ -4,6 +4,8 @@ public class EventSearchCriteria {
     private String title;
     private String description;
     private String location;
+    private String attendees;
+    private String category; 
 
     public Integer getId() {
         return id;
@@ -35,5 +37,21 @@ public class EventSearchCriteria {
 
     public void setLocation(String location){
         this.location = location;
+    }
+
+    public String getAttendees(){
+        return attendees;
+    }
+
+    public void setAttendees(String attendees){
+        this.attendees = attendees;
+    }
+
+    public String getCategory(){
+        return category;
+    }
+
+    public void setCategory(String category){
+        this.category = category;
     }
 }

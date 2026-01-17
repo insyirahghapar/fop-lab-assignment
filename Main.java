@@ -207,6 +207,12 @@ public class Main {
                     System.out.print("Search by Location (press Enter to skip): ");
                     criteria.setLocation(scanner.nextLine());
 
+                    System.out.print("Search by Attendees (press Enter to skip): ");
+                    criteria.setAttendees(scanner.nextLine());
+
+                    System.out.print("Search by Category (press Enter to skip): ");
+                    criteria.setCategory(scanner.nextLine());
+
                     List<Event> results = EventAdvancedSearch.search(events, criteria);
 
                     System.out.println("\n--- Advanced Search Results ---");
