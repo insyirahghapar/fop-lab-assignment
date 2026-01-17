@@ -159,19 +159,25 @@ public class EventManager {
         }
     }
 
-    public void createRecurringEvent(String title, String description, LocalDateTime start, 
-                                 LocalDateTime end, String interval, int times, LocalDate endDate) {
+    public void createRecurringEvent(String title, String description, LocalDateTime start, LocalDateTime end, 
+                                 String loc, String att, String cat, int rem,
+                                 String interval, int times, LocalDate endDate) {
     
-        // create the base event first to get an ID
-        createEvent(title, description, start, end);
+        // check for conflict first (if you implemented the conflict task)
+        if (isConflicting(start, end)) return;
+
+        // create the root event using your existing detailed createEvent method
+        createEvent(title, description, start, end, loc, att, cat, rem);
+    
+        // get the ID of the event we just created
         int newId = eventList.get(eventList.size() - 1).getId();
 
-        // create the recurrence rule linked by that ID 
+        // save the recurrence rule
         Recurrence newRec = new Recurrence(newId, interval, times, endDate);
         recurrenceList.add(newRec);
+        saveRecurrences();
     
-        saveRecurrences(); // persist to recurrent.csv 
-        System.out.println("Recurrence rule added for Event ID: " + newId);
+        System.out.println("Recurrence successfully linked to Event ID: " + newId);
     }
     
     // --- FILE I/O OPERATIONS ---

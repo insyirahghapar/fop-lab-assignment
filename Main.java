@@ -104,16 +104,16 @@ public class Main {
                     if (stopChoice.equals("1")) {
                         System.out.print("Enter number of times to repeat: ");
                         int times = Integer.parseInt(scanner.nextLine());
-                        // Call recurring creator with times (endDate is null)
+                        // call recurring creator with times (endDate is null)
                         manager.createRecurringEvent(title, desc, start, end, location, attendees, category, reminderLeadTime, interval, times, null);
                     } else {
                         System.out.print("Enter end date (YYYY-MM-DD): ");
                         LocalDate endDate = LocalDate.parse(scanner.nextLine());
-                        // Call recurring creator with end date (times is 0)
+                        // call recurring creator with end date (times is 0)
                         manager.createRecurringEvent(title, desc, start, end, location, attendees, category, reminderLeadTime, interval, 0, endDate);
                     }
                 } else {
-                    // Create as a normal single event if user says 'n'
+                    // create as a normal single event if user says 'n'
                     manager.createEvent(title, desc, start, end, location, attendees, category, reminderLeadTime);
                 }
                 break;
