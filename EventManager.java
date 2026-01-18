@@ -58,7 +58,7 @@ public class EventManager {
     }
 
 //
-    // 重载createEvent：支持附加字段和提醒时间
+    //
     public void createEvent(String title, String description, LocalDateTime start, LocalDateTime end,
                        String location, String attendees, String category, int reminderLeadTime) {
         if (isConflicting(start, end)) {
@@ -111,7 +111,7 @@ public class EventManager {
             eventToUpdate.setDescription(newDesc);
             eventToUpdate.setStartDateTime(newStart);
             eventToUpdate.setEndDateTime(newEnd);
-            // 更新附加字段和提醒时间
+            //
             eventToUpdate.setLocation(newLocation);
             eventToUpdate.setAttendees(newAttendees);
             eventToUpdate.setCategory(newCategory);
@@ -319,5 +319,6 @@ public class EventManager {
         }
     }
 }
+
 
 
