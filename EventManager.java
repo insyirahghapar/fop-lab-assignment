@@ -11,10 +11,6 @@ public class EventManager {
     private List<Event> eventList;
     private List<Recurrence> recurrenceList;
 
-    public List<Event> getAllEvents(){
-        return eventList;
-    }
-
     public EventManager() {
         this.eventList = new ArrayList<>();
         this.recurrenceList = new ArrayList<>();
@@ -159,6 +155,50 @@ public class EventManager {
         }
     }
 
+    //get events on particular date by insyirah
+    public List<Event> getEventsOnDate(LocalDate date) {
+    List<Event> result = new ArrayList<>();
+
+    // 1. Normal events
+    for (Event e : eventList) {
+        if (e.getStartDateTime().toLocalDate().equals(date)) {
+            result.add(e);
+        }
+    }
+
+    // 2. Recurring events
+    for (Recurrence r : recurrenceList) {
+        Event base = findEventById(r.getEventId());
+        if (base == null) continue;
+
+        LocalDate current = base.getStartDateTime().toLocalDate();
+
+        int count = 0;
+
+        while (true) {
+            // stop conditions
+            if (r.getTimes() > 0 && count >= r.getTimes()) break;
+            if (r.getEndDate() != null && current.isAfter(r.getEndDate())) break;
+
+            // match date
+            if (current.equals(date)) {
+                result.add(base);
+            }
+
+            // move to next recurrence
+            switch (r.getInterval()) {
+                case "1d": current = current.plusDays(1); break;
+                case "1w": current = current.plusWeeks(1); break;
+                case "1m": current = current.plusMonths(1); break;
+            }
+
+            count++;
+        }
+    }
+
+    return result;
+}
+
     public void createRecurringEvent(String title, String description, LocalDateTime start, LocalDateTime end, 
                                  String loc, String att, String cat, int rem,
                                  String interval, int times, LocalDate endDate) {
@@ -276,3 +316,4 @@ public class EventManager {
         }
     }
 }
+
