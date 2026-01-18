@@ -33,24 +33,24 @@ public class DisplayCalendar {
         }
         date = date.with(weekFields.dayOfWeek(),1);
         System.out.println("Week " + weekNumber + " of " + year);
-        List<Event> events = manager.getAllEvents();
+        
         for(int i = 0; i < 7; i++){
             System.out.printf("%-10s %02d/%02d/%d%n",date.getDayOfWeek(),
                     date.getDayOfMonth(),
                     date.getMonthValue(), 
                     date.getYear());
-            boolean hasEvent = false;
-
-            for(Event e : events){
-                if(e.getStartDateTime().toLocalDate().equals(date)){
-                    System.out.println(" " + e.getStartDateTime().toLocalTime()
-                                       + " - " + e.getTitle());
-                    hasEvent = true;
+            
+            List<Event> events = manager.getEventsOnDate(date);
+            
+            if(events.isEmpty()){
+                System.out.println(" No Event ");
+            }else{
+                for(Event e : events){
+                    System.out.println(" " + e.getStartDateTime().toLocalTime() +
+                                       " - " + e.getTitle());
                 }
             }
-            if(!hasEvent){
-                System.out.println(" No Event ");
-            }
+            
             
             date = date.plusDays(1);
         }
@@ -68,7 +68,6 @@ public class DisplayCalendar {
         int index = startDay - 1;
         
         System.out.println(month + " " + year);
-        List<Event> events = manager.getAllEvents();
         System.out.println("Mon Tue Wed Thu Fri Sat Sun");
         for(int i = 0; i < index; i++){
             System.out.print("    ");
@@ -76,13 +75,9 @@ public class DisplayCalendar {
         for(int day = 1; day <= totalDay; day++){
             LocalDate current = LocalDate.of(year, monthNumber, day);
             
-        boolean hasEvent = false;
-        for(Event e : events){
-                if(e.getStartDateTime().toLocalDate().equals(current)){
-                    hasEvent = true;
-                    break;
-                }
-            }
+        List<Event> events = manager.getEventsOnDate(current);
+        boolean hasEvent = !events.isEmpty();
+            
             if(hasEvent){
                 System.out.printf("%2d* ", day);
             }else{
@@ -93,15 +88,19 @@ public class DisplayCalendar {
                 System.out.println();
             }
         }
-        System.out.println("\nEvents: ");
-        for(Event e : events){
-            if(e.getStartDateTime().getYear() == year && 
-                    e.getStartDateTime().getMonthValue() == monthNumber){
-                System.out.println(e.getStartDateTime().toLocalDate() + " "
-                + e.getStartDateTime().toLocalTime()
-                + " - " + e.getTitle());
-            }
-        }
+        System.out.println("\nEvents:");
+
+        for (int day = 1; day <= totalDay; day++) {
+            LocalDate current = LocalDate.of(year, monthNumber, day);
+            List<Event> eventsToday = manager.getEventsOnDate(current);
+
+            for (Event e : eventsToday) {
+                 System.out.println(current + " "
+                                    + e.getStartDateTime().toLocalTime()
+                                    + " - " + e.getTitle());
+    }
+}
+
 
 }
 }
