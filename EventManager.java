@@ -11,6 +11,9 @@ public class EventManager {
     private List<Event> eventList;
     private List<Recurrence> recurrenceList;
 
+    public List<Event> getAllEvents(){
+        return eventList;}
+
     public EventManager() {
         this.eventList = new ArrayList<>();
         this.recurrenceList = new ArrayList<>();
@@ -316,4 +319,5 @@ public class EventManager {
         }
     }
 }
+
 
